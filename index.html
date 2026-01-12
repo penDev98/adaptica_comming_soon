@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADAPTICA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anta&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Anta', 'sans-serif'],
+            },
+            colors: {
+              'adaptica-base': '#F5F5F7',
+              'adaptica-dark': '#1C1C1C',
+              'adaptica-red': '#A63A42',
+              'adaptica-green': '#3E7C67',
+            },
+            boxShadow: {
+              'glossy-red': 'inset 2px 2px 4px rgba(255,255,255,0.4), inset -2px -2px 4px rgba(0,0,0,0.2), 4px 4px 8px rgba(0,0,0,0.1)',
+              'glossy-red-hover': 'inset 2px 2px 4px rgba(255,255,255,0.5), inset -2px -2px 4px rgba(0,0,0,0.2), 6px 6px 12px rgba(166, 58, 66, 0.3)',
+            },
+            animation: {
+              'hologram-enter': 'hologramEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+              'hologram-fade': 'hologramFade 0.6s ease-out forwards',
+              'beam-pulse': 'beamPulse 2s infinite',
+            },
+            keyframes: {
+              hologramEnter: {
+                '0%': { 
+                  opacity: '0',
+                  transform: 'translate(var(--start-x, 0px), var(--start-y, 50px)) scale(0.05)',
+                  filter: 'blur(10px)',
+                },
+                '60%': {
+                   opacity: '1',
+                   filter: 'blur(0px)',
+                },
+                '100%': {
+                   opacity: '1',
+                   transform: 'translate(0, 0) scale(1)',
+                }
+              },
+              hologramFade: {
+                '0%': { opacity: '1' },
+                '100%': { opacity: '0' }
+              },
+              beamPulse: {
+                '0%, 100%': { opacity: '0.4' },
+                '50%': { opacity: '0.8' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #1C1C1C;
+        color: #F5F5F7;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "path": "https://esm.sh/path@^0.12.7",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "url": "https://esm.sh/url@^0.11.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <!-- Hidden Netlify Form -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <textarea name="message"></textarea>
+    </form>
+
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
