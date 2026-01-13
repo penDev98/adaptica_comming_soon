@@ -15,26 +15,30 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, triggerRect }) => 
   });
   
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /* 
-    Encode form data for Netlify
-  */
-  const encode = (data: any) => {
-    return Object.keys(data)
-        .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-        .join("&");
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encode({ "form-name": "contact", ...formState })
-    })
-      .then(() => setIsSubmitted(true))
-      .catch(error => alert(error));
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState)
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        const data = await response.json();
+        alert(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      alert("Failed to submit form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const animationStyles = useMemo(() => {
@@ -171,13 +175,14 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, triggerRect }) => 
                     </div>
                 </div>
 
-                <button 
+                <button
                 type="submit"
-                className="w-full relative overflow-hidden bg-gradient-to-r from-adaptica-red to-[#802028] text-adaptica-base font-display font-medium tracking-[0.1em] uppercase text-sm py-5 rounded-2xl shadow-[0_10px_30px_-10px_rgba(166,58,66,0.6)] hover:shadow-[0_20px_40px_-10px_rgba(166,58,66,0.8)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-all duration-300 group/btn"
+                disabled={isSubmitting}
+                className="w-full relative overflow-hidden bg-gradient-to-r from-adaptica-red to-[#802028] text-adaptica-base font-display font-medium tracking-[0.1em] uppercase text-sm py-5 rounded-2xl shadow-[0_10px_30px_-10px_rgba(166,58,66,0.6)] hover:shadow-[0_20px_40px_-10px_rgba(166,58,66,0.8)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-all duration-300 group/btn disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                     <span className="relative z-10 flex items-center justify-center gap-3">
-                    Initialize Protocol
-                    <Send size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform duration-300" />
+                    {isSubmitting ? "Transmitting..." : "Initialize Protocol"}
+                    {!isSubmitting && <Send size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform duration-300" />}
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     <div className="absolute top-0 left-[-100%] w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 group-hover/btn:animate-[shimmer_1s_infinite]"></div>
